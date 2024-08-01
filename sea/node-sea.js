@@ -60,11 +60,14 @@ const sea = (params) => {
   const paths = createFolderPaths(pathParams);
 
   const transcribeProgram = () => {
+    console.log("Transcribing program");
     fs.writeFileSync(paths.jsFilePath, fileContent);
     createdFiles.push(paths.jsFilePath);
   };
 
   const generateConfig = () => {
+    console.log("Generating config");
+
     const config = {
       main: paths.jsFilePath,
       output: paths.blobPath,
@@ -75,17 +78,20 @@ const sea = (params) => {
   };
 
   const generateSeaBlob = () => {
+    console.log("Generating sea blob");
     execSync(`node --experimental-sea-config ${paths.configPath}`);
     createdFiles.push(paths.blobPath);
   };
 
   const generateExeFromNodeBinary = () => {
+    console.log("Generating exe from node binary");
     const binaryLoc = paths.binDir ?? process.execPath;
     fs.copyFileSync(binaryLoc, paths.exePath);
     createdFiles.push(paths.exePath);
   };
 
   const injectBlob = async () => {
+    console.log("Injecting blob");
     execSync(
       `npx postject ${paths.exePath} NODE_SEA_BLOB ${paths.blobPath} --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`
     );
@@ -98,6 +104,8 @@ const sea = (params) => {
       generateSeaBlob();
       generateExeFromNodeBinary();
       await injectBlob();
+      console.log();
+      console.log("Executable created successfully");
       return true;
     } catch (e) {
       clearFolderAsync(paths.tmpDir, createdFiles);
@@ -106,8 +114,11 @@ const sea = (params) => {
   };
 
   const streamExe = () => {
+    console.log("Starting exe stream");
     const stream = fs.createReadStream(paths.exePath);
     stream.on("end", () => {
+      console.log("Stream ended");
+      console.log("Cleaning up");      
       clearFolderAsync(paths.tmpDir, createdFiles);
     });
     stream.on("error", (err) => {
