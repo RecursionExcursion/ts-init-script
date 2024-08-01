@@ -1,0 +1,13 @@
+{
+  "name": "ts-init-script",
+  "version": "1.0.0",
+  "main": "ts-init.js",
+  "scripts": {
+    "start": "node node-ts.js",
+    "build": "node sea/build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
